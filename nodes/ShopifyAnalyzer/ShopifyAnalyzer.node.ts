@@ -20,7 +20,7 @@ export class ShopifyAnalyzer implements INodeType {
 		version: 1,
 		subtitle: '={{$parameter["storeUrls"]}}',
 		description:
-			'Spy on any Shopify store: estimated revenue, traffic, brand age, tech stack, tracking IDs, promo codes, dropshipper risk, international expansion and 40+ derived signals.',
+			'Spy on any Shopify store: estimated revenue, traffic, brand age, tech stack (60+ apps), tracking IDs, promo codes, dropshipper risk, best-sellers, Meta Ad Library link, store health & lead score, upsell gaps, plus competitor change-tracking between runs.',
 		defaults: {
 			name: 'Shopify Store Analyzer',
 		},
@@ -46,12 +46,20 @@ export class ShopifyAnalyzer implements INodeType {
 					'One or more Shopify store homepages (max 100 per run). Bare domains or full URLs. Separate multiple with a new line or comma.',
 			},
 			{
-				displayName: 'Competitor Comparison Report (Premium)',
+				displayName: 'Competitor Comparison Report',
 				name: 'generateComparison',
 				type: 'boolean',
-				default: false,
+				default: true,
 				description:
-					'Whether to add a single cross-store benchmarking report when analyzing 2+ stores (rankings by traffic, revenue, AOV, discounting, expansion, shared tech). Billed once per run as a separate premium event, only when a report is produced.',
+					'Whether to add a single cross-store benchmarking report when analyzing 2+ stores (rankings by traffic, revenue, AOV, discounting, expansion, shared tech). Included for all runs at no extra event — turn off to skip the extra record.',
+			},
+			{
+				displayName: 'Track Changes Between Runs',
+				name: 'trackChanges',
+				type: 'boolean',
+				default: true,
+				description:
+					'Whether to remember each store between runs and report what changed since the last analysis (new/removed products, traffic & revenue moves, apps installed, promos launched) in a "changes" field. Run on a schedule to monitor competitors over time.',
 			},
 			{
 				displayName: 'Revenue Estimate Settings',
@@ -157,6 +165,14 @@ export class ShopifyAnalyzer implements INodeType {
 						description: 'Whether to extract public emails and phones from the homepage',
 					},
 					{
+						displayName: 'Deep Contact Crawl',
+						name: 'deepContactCrawl',
+						type: 'boolean',
+						default: true,
+						description:
+							'Whether to also check the store contact / about pages for an email when the homepage shows none. Only fires when the homepage has no email, so it costs no extra time for stores that already expose contact info. Improves the best_email hit rate for lead generation.',
+					},
+					{
 						displayName: 'Shopify Meta',
 						name: 'extractShopifyMeta',
 						type: 'boolean',
@@ -256,8 +272,9 @@ export class ShopifyAnalyzer implements INodeType {
 				const generateComparison = this.getNodeParameter(
 					'generateComparison',
 					i,
-					false,
+					true,
 				) as boolean;
+				const trackChanges = this.getNodeParameter('trackChanges', i, true) as boolean;
 				const revenueSettings = this.getNodeParameter('revenueSettings', i, {}) as {
 					conversionRate?: number;
 					productSampleSize?: number;
@@ -271,6 +288,7 @@ export class ShopifyAnalyzer implements INodeType {
 				const body: Record<string, unknown> = {
 					storeUrls,
 					generateComparison,
+					trackChanges,
 					conversionRate: revenueSettings.conversionRate ?? 2.5,
 					productSampleSize: revenueSettings.productSampleSize ?? 250,
 					// extraction layers (defaults match the actor's input schema)
@@ -283,6 +301,7 @@ export class ShopifyAnalyzer implements INodeType {
 					extractTechStack: extraction.extractTechStack ?? true,
 					extractSocials: extraction.extractSocials ?? true,
 					extractContact: extraction.extractContact ?? true,
+					deepContactCrawl: extraction.deepContactCrawl ?? true,
 					extractShopifyMeta: extraction.extractShopifyMeta ?? true,
 					extractInternational: extraction.extractInternational ?? true,
 					extractReviewsAggregate: extraction.extractReviewsAggregate ?? true,
