@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-apivault-shopify-analyzer",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "n8n community node for Shopify Store Analyzer — spy on any Shopify store: estimated revenue, traffic, brand age, tech stack (60+ apps), tracking IDs (GTM/GA4/FB Pixel), active promo codes, dropshipper risk, customer segment and international expansion. StoreLeads.app alternative. CSV-ready JSON. No login. Pay-as-you-go, no monthly fee.",
   "license": "MIT",
   "homepage": "https://apify.com/apivault_labs/shopify-store-analyzer",
