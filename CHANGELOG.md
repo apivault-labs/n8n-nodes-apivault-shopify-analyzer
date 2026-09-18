@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.2
+
+- New options: **Track Changes Between Runs** (competitor monitoring — diff of
+  new/removed products, traffic & revenue moves, apps installed, promos) and
+  **Deep Contact Crawl** (find an email on the contact/about pages when the
+  homepage shows none — better lead contacts).
+- The **Competitor Comparison Report** is now included for every multi-store
+  run at no extra event (was a separate premium add-on) — on by default.
+- Output now also includes store health score, lead score, growth signals,
+  best-sellers, Meta Ad Library link, payment/BNPL stack, upsell opportunities
+  and primary niche (no node change required — returned by the Actor).
+
 ## 0.1.0
 
 - Initial release.
