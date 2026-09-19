@@ -68,6 +68,13 @@ Billed per store through Apify (pay-per-event): **$10 / 1,000 stores** ($0.01 ea
 
 [MIT](LICENSE)
 
+## Ready-to-import workflow
+
+The package includes `examples/quickstart-workflow.json`: a repeatable competitor
+snapshot that can feed a sheet, database or alert workflow. Import it into n8n,
+select your Apify credential and replace the sample store. The workflow is inactive
+by default and contains no credentials.
+
 ## Keywords
 
 `shopify-scraper` `shopify-analyzer` `ecommerce-intelligence` `competitor-analysis` `revenue-estimate` `tech-stack-detection` `storeleads-alternative` `lead-generation` `dropshipping` `n8n` `apify`
