@@ -221,31 +221,6 @@ export class ShopifyAnalyzer implements INodeType {
 					},
 				],
 			},
-			{
-				displayName: 'Advanced Options',
-				name: 'advancedOptions',
-				type: 'collection',
-				placeholder: 'Add Option',
-				default: {},
-				options: [
-					{
-						displayName: 'Max Concurrency',
-						name: 'maxConcurrency',
-						type: 'number',
-						typeOptions: { minValue: 1, maxValue: 10 },
-						default: 3,
-						description: 'Parallel stores to analyze',
-					},
-					{
-						displayName: 'Timeout per Request (Seconds)',
-						name: 'timeout',
-						type: 'number',
-						typeOptions: { minValue: 10, maxValue: 180 },
-						default: 30,
-						description: 'HTTP timeout per request',
-					},
-				],
-			},
 		],
 	};
 
@@ -280,11 +255,6 @@ export class ShopifyAnalyzer implements INodeType {
 					productSampleSize?: number;
 				};
 				const extraction = this.getNodeParameter('extraction', i, {}) as Record<string, boolean>;
-				const advanced = this.getNodeParameter('advancedOptions', i, {}) as {
-					maxConcurrency?: number;
-					timeout?: number;
-				};
-
 				const body: Record<string, unknown> = {
 					storeUrls,
 					generateComparison,
@@ -308,9 +278,6 @@ export class ShopifyAnalyzer implements INodeType {
 					extractPromo: extraction.extractPromo ?? true,
 					extractDerivedSignals: extraction.extractDerivedSignals ?? true,
 					extractBrandAge: extraction.extractBrandAge ?? false,
-					// advanced
-					maxConcurrency: advanced.maxConcurrency ?? 3,
-					timeout: advanced.timeout ?? 30,
 				};
 
 				const options: IRequestOptions = {
