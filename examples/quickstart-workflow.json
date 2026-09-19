@@ -1,0 +1,104 @@
+{
+  "id": "e7444a50-f103-5df8-861b-7ada0225ce2f",
+  "name": "Shopify Analyzer → Competitor watch",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "b95f3efe-20f0-5a93-a02a-fc8779246764",
+      "name": "When clicking Execute workflow",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Setup\n1. Select your Apify API credential.\n2. Replace the sample store with one or more public Shopify store URLs.\n3. Keep change tracking on for recurring competitor monitoring.\n4. Connect the final snapshot to a sheet, database or alert workflow.",
+        "height": 300,
+        "width": 460
+      },
+      "id": "a2a17f9c-2fa0-5c91-aa22-ba219183a4bb",
+      "name": "How to use this workflow",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "storeUrls": "https://boody.com.au",
+        "generateComparison": true,
+        "trackChanges": true,
+        "revenueSettings": {
+          "conversionRate": 2.5,
+          "productSampleSize": 100
+        },
+        "extraction": {
+          "extractProducts": true,
+          "extractTraffic": true,
+          "extractRevenueEstimate": true,
+          "extractTechStack": true,
+          "extractSocials": true,
+          "extractContact": true
+        }
+      },
+      "id": "40d1a428-41d7-5a06-8011-e035dd92ef08",
+      "name": "Analyze Shopify stores with Apify",
+      "type": "n8n-nodes-apivault-shopify-analyzer.shopifyAnalyzer",
+      "typeVersion": 1,
+      "position": [
+        260,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const j = $json; const domain = j.domain ?? j.storeDomain ?? j.url ?? ''; const traffic = j.monthlyVisits ?? j.traffic?.monthlyVisits ?? 0; const revenue = j.monthlyRevenueUsd ?? j.revenueEstimate?.monthlyRevenueUsd ?? null; return { json: { ...j, competitorSnapshot: { domain, traffic, revenue, productCount: j.productCount ?? j.productsCount ?? null, capturedAt: new Date().toISOString() } } };"
+      },
+      "id": "d7d9b7cb-b820-5593-982e-bd792b71423f",
+      "name": "Build competitor snapshot",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        580,
+        120
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking Execute workflow": {
+      "main": [
+        [
+          {
+            "node": "Analyze Shopify stores with Apify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Shopify stores with Apify": {
+      "main": [
+        [
+          {
+            "node": "Build competitor snapshot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "39531560-2dfa-53ef-8b3f-71bc99f851d4",
+  "tags": []
+}
