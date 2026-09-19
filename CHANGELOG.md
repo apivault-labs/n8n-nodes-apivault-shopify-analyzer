@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+- Added a ready-to-import competitor monitoring workflow.
+- Simplified setup by keeping infrastructure settings managed by the Actor.
+
 ## 0.1.2
 
 - New options: **Track Changes Between Runs** (competitor monitoring — diff of
